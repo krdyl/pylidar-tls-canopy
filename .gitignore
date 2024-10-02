@@ -871,3 +871,8 @@ build/lib.linux-x86_64-cpython-312/pylidar_tls_canopy/cmd/voxelization.py
 build/temp.linux-x86_64-cpython-312/src/pylidar.o
 build/temp.linux-x86_64-cpython-312/src/riegl_rdb.o
 build/temp.linux-x86_64-cpython-312/src/riegl_rxp.o
+pylidar_tls_canopy/__pycache__/grid.cpython-312.pyc
+pylidar_tls_canopy/__pycache__/leaf_io.cpython-312.pyc
+pylidar_tls_canopy/__pycache__/plant_profile.cpython-312.pyc
+pylidar_tls_canopy/__pycache__/riegl_io.cpython-312.pyc
+results/Figure_1.png
