@@ -57,20 +57,25 @@ class Jupp2009:
         """
         Add targets
         """
+        print("add_targets called, method =", repr(method),"n_targets =", len(target_height))
         h_idx = np.int16((target_height - self.min_h) // self.hres)
         z_idx = np.int16((target_zenith - self.min_z_r) // self.zres_r)
         a_idx = np.int16(target_azimuth // self.ares_r)
         if method == 'WEIGHTED':
             w = 1 / target_count
             sum_by_index_3d(w, z_idx, a_idx, h_idx, self.target_output)
+            print("WEIGHTED")
         elif method == 'FIRSTLAST':
             w = np.full(target_count.shape[0], 0.5, dtype=np.float32)
             sum_by_index_3d(w, z_idx, a_idx, h_idx, self.target_output)
+            print("FIRSTLAST")
         elif method == 'ALL':
             w = np.ones(target_height.shape[0], dtype=np.float32)
             sum_by_index_3d(w, z_idx, a_idx, h_idx, self.target_output)
+            print("ALL")
         elif method == 'FIRST':
             idx = (target_index == 1)
+            print("FIRST")
             if np.any(idx):
                 w = np.ones(np.count_nonzero(idx), dtype=np.float32)
                 sum_by_index_3d(w, z_idx[idx], a_idx[idx], h_idx[idx], 
@@ -102,8 +107,8 @@ class Jupp2009:
         min_zenith_r = np.radians(min_zenith)
         max_zenith_r = np.radians(max_zenith)
         pulse_cols = ['zenith','azimuth','target_count', 'scanline', 'scanline_idx']
-        point_cols = ['x','y','z','range','target_index',
-                      'zenith','azimuth','target_count', 'scanline', 'scanline_idx']
+        point_cols = ['x','y','z','range','target_index', 'reflectance', 'amplitude',
+                      'zenith','azimuth','target_count', 'scanline', 'scanline_idx', 'deviation']
         
         print("Reading RXP and optionally RDBX")
 
@@ -187,11 +192,13 @@ class Jupp2009:
             for col in point_cols:
                 points[col] = points[col][idx]
             height = height[idx]
+        
+        self.points = points
 
         print("Adding pulses")
         self.add_shots(pulses['target_count'], pulses['zenith'],
                     pulses['azimuth'], method=method)
-        print("Adding points")
+        print(f"Adding points with {method} weighting")
         self.add_targets(height, points['target_index'], 
             points['target_count'], points['zenith'],
             points['azimuth'], method=method)
